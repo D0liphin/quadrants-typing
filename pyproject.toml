@@ -1,0 +1,154 @@
+# packaging information
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+# project information
+[project]
+name = "quadrants_typing"
+description = "Typing layer and PEP 561 stubs for the quadrants DSL"
+# `version` comes from git tags via hatch-vcs.
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Oliver Iliffe" }]
+keywords = ["quadrants", "taichi", "typing", "stubs", "pep561", "type-hints"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Typing :: Typed",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  # Runtime factories call `qd.types.*`, and it is the target of the shipped stubs.
+  "quadrants>=1.1,<2",
+  # Referenced by `_mat.pyi` / `_algebra.pyi` annotations so downstream
+  # type-checkers can resolve our stubs.
+  "numpy>=2.4,<3",
+]
+
+[project.urls]
+Homepage = "https://github.com/D0liphin/quadrants-typing"
+Repository = "https://github.com/D0liphin/quadrants-typing"
+Issues = "https://github.com/D0liphin/quadrants-typing/issues"
+
+[tool.hatch.version]
+source = "vcs"
+# Fallback used when .git is absent. Real releases get their version from git
+# tags via hatch-vcs.
+raw-options = { fallback_version = "0.0.0+local" }
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+# Two sibling top-level packages ship in one wheel: the inline-typed runtime
+# package `quadrants_typing`, and the PEP 561 stub package `quadrants-stubs`
+# (auto-discovered by type checkers for `import quadrants`).
+[tool.hatch.build.targets.wheel]
+packages = ["quadrants_typing"]
+
+# `quadrants-stubs` is not a valid module name (hyphen), so hatch won't pick it
+# up as a package — force-include it verbatim.
+[tool.hatch.build.targets.wheel.force-include]
+"quadrants-stubs" = "quadrants-stubs"
+
+# The sdist must carry both stub siblings so the wheel can be rebuilt on install.
+[tool.hatch.build.targets.sdist]
+include = ["quadrants_typing", "quadrants-stubs", "README.md", "LICENSE"]
+
+# --- pixi ---------------------------------------------------------------------
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64"]
+
+[tool.pixi.dependencies]
+python = "3.12.*"
+# Referenced by `_mat.pyi` / `_algebra.pyi` annotations so downstream
+# type-checkers can resolve our stubs.
+numpy = ">=2.4,<3"
+pytorch = ">=2.13.0,<3"
+
+[tool.pixi.pypi-dependencies]
+# quadrants is distributed on PyPI, not conda. Runtime factories call
+# `qd.types.*`, and it is the target of the shipped stubs.
+quadrants = ">=1.1,<2"
+
+# The package is not installed into the dev env; the repo root is on PYTHONPATH,
+# so `import quadrants_typing` resolves the source tree and pyright discovers the
+# local `quadrants-stubs/`.
+[tool.pixi.activation.env]
+PYTHONPATH = "$PIXI_PROJECT_ROOT"
+
+[tool.pixi.tasks]
+# Run a script from `examples/` by name, e.g. `pixi run example init_ndarray`.
+example = "python examples/_run.py"
+
+[tool.pixi.environments]
+dev = { features = ["dev"], solve-group = "dev" }
+
+[tool.pixi.feature.dev.dependencies]
+ruff = ">=0.15.11,<0.16"
+pyright = ">=1.1.400,<2"
+pre-commit = ">=4.1.0,<5"
+python-build = "*"
+twine = "*"
+hatchling = "*"
+hatch-vcs = "*"
+
+[tool.pixi.feature.dev.tasks]
+format = "ruff check --fix && ruff format"
+format-check = "ruff check && ruff format --check"
+typecheck = "pyright"
+build-wheel = "python -m build --no-isolation --skip-dependency-check --wheel ."
+# Build both sdist and wheel into `dist/` for a release.
+build = "python -m build --no-isolation --skip-dependency-check ."
+# Validate the built artifacts' metadata before publishing.
+check-dist = "twine check dist/*"
+pre-commit-install = "pre-commit install"
+
+# --- tooling ------------------------------------------------------------------
+
+[tool.ruff]
+lint.ignore = [
+  "E501",
+  "E712",
+  "E731",
+  "F722",
+]
+lint.select = ["E", "F", "I", "W"]
+lint.fixable = ["I", "W", "F401", "E711"]
+lint.pycodestyle.ignore-overlong-task-comments = false
+# __init__.py re-exports symbols for the public API (F401) and orders imports
+# for readability (E402, I001).
+lint.per-file-ignores = { "__init__.py" = [
+  "E402",
+  "F401",
+  "I001",
+] }
+format.docstring-code-format = true
+format.docstring-code-line-length = 100
+line-length = 100
+exclude = [".env", ".venv", "venv"]
+# force-exclude so the excludes apply even when pre-commit passes file paths explicitly
+force-exclude = true
+output-format = "full"
+
+# `quadrants-stubs` is not in `include` (a hyphenated dir is not a valid import
+# root, so pyright can't scan it as a source target). Instead `stubPath = "."`
+# points pyright at the repo root so it discovers the local `quadrants-stubs/`
+# as the stubs for `import quadrants` — the same PEP 561 discovery a consumer
+# gets from the installed package, without needing an install here.
+[tool.pyright]
+include = ["quadrants_typing"]
+exclude = [
+  "**/__pycache__",
+  "**/.*",
+]
+stubPath = "."
+pythonVersion = "3.12"
+reportGeneralTypeIssues = "warning"
