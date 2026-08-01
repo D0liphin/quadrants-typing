@@ -75,11 +75,11 @@ quadrants.                                          ?
       exclusive_add ✔  exclusive_max ✔  exclusive_min ✔  exclusive_scan ✔
       sync_all_nonzero ✔  sync_any_nonzero ✔  sync_count_nonzero ✔
       arch_uses_spv ✔  radix_rank_match_atomic_or ✔
-    warp.                                           x
-      active_mask x  all_nonzero x  any_nonzero x  ballot x  unique x  sync x
-      match_all x  match_any x
-      shfl_sync_i32 x  shfl_sync_f32 x  shfl_up_i32 x  shfl_up_f32 x
-      shfl_down_i32 x  shfl_down_f32 x  shfl_xor_i32 x
+    warp.                                           ✔
+      active_mask ✔  all_nonzero ✔  any_nonzero ✔  ballot ✔  unique ✔  sync ✔
+      match_all ✔  match_any ✔
+      shfl_sync_i32 ✔  shfl_sync_f32 ✔  shfl_up_i32 ✔  shfl_up_f32 ✔
+      shfl_down_i32 ✔  shfl_down_f32 ✔  shfl_xor_i32 ✔
     subgroup.                                       x
       # membership / election
       elect x  barrier x  group_size x  log2_group_size x  invocation_id x
