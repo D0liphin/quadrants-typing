@@ -1,4 +1,4 @@
-from typing import Callable, Generic, overload
+from typing import Generic, overload
 
 from quadrants import i32, u32
 from quadrants._ops import Arch
@@ -6,6 +6,7 @@ from quadrants._ops import Arch
 from quadrants_typing._algebra import _Dim, _Num, _NumAlt
 from quadrants_typing._arraylike import _ArrayLike
 from quadrants_typing._dim import Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7, Dim8, DimAny
+from quadrants_typing._func import Func
 
 class SharedArray(_ArrayLike[_Num, _Dim], Generic[_Num, _Dim]):
     # `dtype` and `shape` are inherited from `_ArrayLike`.
@@ -81,10 +82,10 @@ def arch_uses_spv(arch: Arch) -> bool: ...
 
 # block reductions: result dtype matches `value`; `op` is a `@qd.func` monoid.
 def reduce(
-    value: _Num, block_dim: int, op: Callable[[_Num, _Num], _Num], dtype: type[_Num]
+    value: _Num, block_dim: int, op: Func[[_Num, _Num], _Num], dtype: type[_Num]
 ) -> _Num: ...
 def reduce_all(
-    value: _Num, block_dim: int, op: Callable[[_Num, _Num], _Num], dtype: type[_Num]
+    value: _Num, block_dim: int, op: Func[[_Num, _Num], _Num], dtype: type[_Num]
 ) -> _Num: ...
 def reduce_add(value: _Num, block_dim: int, dtype: type[_Num]) -> _Num: ...
 def reduce_min(value: _Num, block_dim: int, dtype: type[_Num]) -> _Num: ...
@@ -95,12 +96,12 @@ def reduce_all_max(value: _Num, block_dim: int, dtype: type[_Num]) -> _Num: ...
 
 # block scans: `exclusive_scan` takes an explicit `identity` (thread 0's value).
 def inclusive_scan(
-    value: _Num, block_dim: int, op: Callable[[_Num, _Num], _Num], dtype: type[_Num]
+    value: _Num, block_dim: int, op: Func[[_Num, _Num], _Num], dtype: type[_Num]
 ) -> _Num: ...
 def exclusive_scan(
     value: _Num,
     block_dim: int,
-    op: Callable[[_Num, _Num], _Num],
+    op: Func[[_Num, _Num], _Num],
     identity: _Num,
     dtype: type[_Num],
 ) -> _Num: ...
