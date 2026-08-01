@@ -12,27 +12,10 @@ from quadrants_typing._algebra import (
     _Dim,
     _El,
 )
-from quadrants_typing._dim import Dim1, Dim2, Dim3, Dim4, DimAny
+from quadrants_typing._arraylike import _ArrayLike
+from quadrants_typing._dim import Dim1, Dim2, Dim3, DimAny
 from quadrants_typing._mat import Mat
 from quadrants_typing._vec import Vec
-
-_Vec2i = Vec[int, Dim2]
-_Vec3i = Vec[int, Dim3]
-_Vec4i = Vec[int, Dim4]
-
-class _Shape:
-    @overload
-    def __get__(self, instance: NDArray[Any, Dim1], owner: Any = None) -> tuple[int]: ...
-    @overload
-    def __get__(self, instance: NDArray[Any, Dim2], owner: Any = None) -> tuple[int, int]: ...
-    @overload
-    def __get__(self, instance: NDArray[Any, Dim3], owner: Any = None) -> tuple[int, int, int]: ...
-    @overload
-    def __get__(
-        self, instance: NDArray[Any, Dim4], owner: Any = None
-    ) -> tuple[int, int, int, int]: ...
-    @overload
-    def __get__(self, instance: NDArray[Any, DimAny], owner: Any = None) -> tuple[int, ...]: ...
 
 class _ElementShape:
     @overload
@@ -46,7 +29,7 @@ class _ElementShape:
         self, instance: NDArray[Mat[Any, Any, Any], Dim1], owner: Any = None
     ) -> tuple[int, int]: ...
 
-class NDArray(Generic[_El, _Dim]):
+class NDArray(_ArrayLike[_El, _Dim], Generic[_El, _Dim]):
     """Type annotation for kernel ndarray arguments.
 
     You can pass tensors to kernels that take this as the argument. This is a
@@ -58,8 +41,7 @@ class NDArray(Generic[_El, _Dim]):
     Use `len(ndarray.shape)` for `ndarray.ndim`!
     """
 
-    dtype: type[_El]
-    shape = _Shape()
+    # `dtype` and `shape` are inherited from `_ArrayLike`.
     element_shape = _ElementShape()
 
     @overload
@@ -224,38 +206,7 @@ class NDArray(Generic[_El, _Dim]):
         | NDArray[Vec[qd.f64, Any], DimAny]
         | NDArray[Mat[qd.f64, Any, Any], DimAny],
     ) -> npt.NDArray[np.float64]: ...
-    @overload
-    def __getitem__(self: NDArray[_El, Dim1], key: int, /) -> _El: ...
-    @overload
-    def __getitem__(self: NDArray[_El, Dim2], key: _Vec2i | tuple[int, int], /) -> _El: ...
-    @overload
-    def __getitem__(self: NDArray[_El, Dim3], key: _Vec3i | tuple[int, int, int], /) -> _El: ...
-    @overload
-    def __getitem__(
-        self: NDArray[_El, Dim4], key: _Vec4i | tuple[int, int, int, int], /
-    ) -> _El: ...
-    @overload
-    def __getitem__(
-        self: NDArray[_El, DimAny], key: Vec[int, DimAny] | tuple[int, ...] | int, /
-    ) -> _El: ...
-    @overload
-    def __setitem__(self: NDArray[_El, Dim1], key: int, val: _El, /) -> None: ...
-    @overload
-    def __setitem__(
-        self: NDArray[_El, Dim2], key: _Vec2i | tuple[int, int], val: _El, /
-    ) -> None: ...
-    @overload
-    def __setitem__(
-        self: NDArray[_El, Dim3], key: _Vec3i | tuple[int, int, int], val: _El, /
-    ) -> None: ...
-    @overload
-    def __setitem__(
-        self: NDArray[_El, Dim4], key: _Vec4i | tuple[int, int, int, int], val: _El, /
-    ) -> None: ...
-    @overload
-    def __setitem__(
-        self: NDArray[_El, DimAny], key: Vec[int, DimAny] | tuple[int, ...] | int, val: _El, /
-    ) -> None: ...
+    # `__getitem__` / `__setitem__` are inherited from `_ArrayLike`.
     def __add__(self, other: _El, /) -> Self: ...
     def __radd__(self, other: _El, /) -> Self: ...
     def __sub__(self, other: _El, /) -> Self: ...

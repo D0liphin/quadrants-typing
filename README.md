@@ -32,7 +32,7 @@ Type annotations replaces *directly* some quadrants functions, mostly from
 `qd.types`. Here is a full table:
 
 * `N`,`R`,`C` in `{1,2,3,4,5,6,7,8}`
-* `dtype` n `{qd.u8, qd.u16, qd.u32, ... etc.}` 
+* `dtype` n `{qd.u8, qd.u16, qd.u32, ... etc.}`
 
 | Description | `qdt` version | `qd` version | Example |
 |:-:|:-:|:-:|:-:|
@@ -58,3 +58,23 @@ pixi run example init_ndarray
 ## How Finished is This?
 
 Not at all! There's lots of work still to be done :P. Please help!
+
+## Omissions
+
+Names present in `quadrants` that we intentionally do *not* stub in `qdt`, with
+the reason / recommended alternative:
+
+### Intentional
+
+- **`qd.types.struct`**: use `dataclasses.dataclass`
+- **`qd.types.NDArray`**: superseded by `qdt.NDArray[qd.<dtype>, Dim<N>]`
+- **`qd.types.ndarray`**: superseded by `qdt.NDArray[T, DimAny]`
+- **`qd.types.Template`**: superseded by `qdt.Template[T]`
+- **`qd.template`**: superseded by `qdt.Template[T]`
+
+### Todo
+
+- **`qd.types.ref`**: todo(real_func)
+- **`qd.types.quant.*`** (`int`, `float`, `fixed`): todo(field)
+- **`qd.types.sparse_matrix_builder`**: todo(sparse_matrix)
+- **`quadrants.lang.simt.warp`**, **`.subgroup`**, **`.reductions`**, **`.sorting`**, **`.grid`**, **`.tile_slicing`**: todo(simt) — only `simt.block` is stubbed so far
