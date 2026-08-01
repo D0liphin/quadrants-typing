@@ -1,4 +1,4 @@
-from typing import Self, TypeVar
+from typing import Literal, Self, TypeVar
 
 from quadrants.types.primitive_types import (
     f16,
@@ -119,3 +119,44 @@ _FloatNumAlt = TypeVar("_FloatNumAlt", float, f16, f64)
 _DimAlt = TypeVar("_DimAlt", bound=DimAny, covariant=True)
 _RowAlt = TypeVar("_RowAlt", bound=DimAny, covariant=True)
 _ColAlt = TypeVar("_ColAlt", bound=DimAny, covariant=True)
+
+# Compile-time constants for the `simt.subgroup` tiled ops. `log2_size` picks a
+# tile of `2**log2_size` lanes: `0` (a tile of one, a no-op / identity sort) up
+# to `5` (32-lane wave32) or `6` (64-lane AMDGPU wave64). `ballot_first_n`'s `n`
+# is a lane count in `[1, 32]`. These are `template()` args, so they must be
+# compile-time literals — the type is a hint, not enforcement of static-ness.
+type _Log2Size = Literal[0, 1, 2, 3, 4, 5, 6]
+type _BallotWidth = Literal[
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+]

@@ -54,6 +54,8 @@ if TYPE_CHECKING:
         SignedInteger,
         UnsignedInteger,
     )
+    from quadrants_typing._func import Func
+    from quadrants_typing._kernel import Kernel
     from quadrants_typing._dim import DimConcrete
 
 __all__ = [
@@ -92,4 +94,6 @@ __all__ = [
     "Vec4i",
     "dim",
     "annotations",
+    "Func",
+    "Kernel",
 ]

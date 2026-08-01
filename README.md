@@ -77,4 +77,4 @@ the reason / recommended alternative:
 - **`qd.types.ref`**: todo(real_func)
 - **`qd.types.quant.*`** (`int`, `float`, `fixed`): todo(field)
 - **`qd.types.sparse_matrix_builder`**: todo(sparse_matrix)
-- **`quadrants.lang.simt.subgroup`**, **`.reductions`**, **`.sorting`**, **`.grid`**, **`.tile_slicing`**: todo(simt) — only `simt.block` and `simt.warp` are stubbed so far
+- **`quadrants.lang.simt.grid`**, **`.tile_slicing`**: todo(simt) — `simt.block`, `.warp`, `.subgroup` (incl. its `reductions`/`sorting` re-exports) are stubbed

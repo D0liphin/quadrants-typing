@@ -80,27 +80,29 @@ quadrants.                                          ?
       match_all ✔  match_any ✔
       shfl_sync_i32 ✔  shfl_sync_f32 ✔  shfl_up_i32 ✔  shfl_up_f32 ✔
       shfl_down_i32 ✔  shfl_down_f32 ✔  shfl_xor_i32 ✔
-    subgroup.                                       x
+    subgroup.                                       ✔
       # membership / election
-      elect x  barrier x  group_size x  log2_group_size x  invocation_id x
-      all_true x  any_true x  all_equal x  ballot x  broadcast x  broadcast_first x
+      elect ✔  barrier ✔  group_size ✔  log2_group_size ✔  invocation_id ✔
+      all_true ✔  any_true ✔  all_equal ✔  ballot ✔  broadcast ✔  broadcast_first ✔
+      ballot_first_n ✔  ballot_full_subgroup ✔
+      all_true_tiled ✔  any_true_tiled ✔  all_equal_tiled ✔
       # lane masks
-      lanemask_eq x  lanemask_lt x  lanemask_le x  lanemask_gt x  lanemask_ge x
+      lanemask_eq ✔  lanemask_lt ✔  lanemask_le ✔  lanemask_gt ✔  lanemask_ge ✔
       # shuffles
-      shuffle x  shuffle_up x  shuffle_down x  shuffle_xor x
-      mem_fence x  memory_barrier x  sync x
-      # (+ *_tiled variants, and reductions/sorting re-exports *)
-    reductions.                                     x
-      reduce_add x  reduce_max x  reduce_min x
-      reduce_all_add x  reduce_all_max x  reduce_all_min x
-      inclusive_add x  inclusive_max x  inclusive_min x  inclusive_mul x
-      inclusive_and x  inclusive_or x  inclusive_xor x
-      exclusive_add x  exclusive_max x  exclusive_min x  exclusive_mul x
-      exclusive_and x  exclusive_or x  exclusive_xor x
-      segmented_reduce_add x  segmented_reduce_max x  segmented_reduce_min x
-      # (+ *_tiled variant of each of the above)
-    sorting.                                        x
-      bitonic_sort_kv x   bitonic_sort_kv_tiled x
+      shuffle ✔  shuffle_up ✔  shuffle_down ✔  shuffle_xor ✔
+      mem_fence ✔  memory_barrier ✔  sync ✔
+      # (+ reductions/sorting re-exports *)
+    reductions.                                     ✔
+      reduce_add ✔  reduce_max ✔  reduce_min ✔
+      reduce_all_add ✔  reduce_all_max ✔  reduce_all_min ✔
+      inclusive_add ✔  inclusive_max ✔  inclusive_min ✔  inclusive_mul ✔
+      inclusive_and ✔  inclusive_or ✔  inclusive_xor ✔
+      exclusive_add ✔  exclusive_max ✔  exclusive_min ✔  exclusive_mul ✔
+      exclusive_and ✔  exclusive_or ✔  exclusive_xor ✔
+      segmented_reduce_add ✔  segmented_reduce_max ✔  segmented_reduce_min ✔
+      # (+ *_tiled variant of each of the above ✔)
+    sorting.                                        ✔
+      bitonic_sort_kv ✔   bitonic_sort_kv_tiled ✔
     grid.                                           x
       mem_fence x   memfence x   arch_uses_spv x
     tile_slicing.                                   x
