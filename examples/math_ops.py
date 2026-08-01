@@ -8,7 +8,7 @@ import quadrants_typing as qdt
 
 # Replace each value with its square root.
 @qd.kernel
-def sqrt_all(a: qdt.NDArray[qd.f32, qdt.Dim1]) -> None:
+def sqrt_all[T: (qd.f32, qdt.Vec[qd.f32, qdt.DimAny])](a: qdt.NDArray[T, qdt.Dim1]) -> None:
     for i in range(a.shape[0]):
         a[i] = qd.math.sqrt(a[i])
 
