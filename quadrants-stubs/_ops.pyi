@@ -131,13 +131,3 @@ def atomic_cas[T: (int, float)](dst: T, expected: T, desired: T, /) -> T: ...
 # --- randomness ---
 
 def random(dtype: type[_Num]) -> _Num: ...
-
-# --- SIMT namespace ---
-class _BlockSIMT:
-    def reduce_add(self, value: _Num, block_dim: int, dtype: type[_Num], /) -> _Num: ...
-    def thread_idx(self) -> i32: ...
-
-class _SIMT:
-    block: _BlockSIMT
-
-simt: _SIMT

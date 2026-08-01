@@ -36,11 +36,11 @@ from quadrants._ops import raw_div as raw_div
 from quadrants._ops import raw_mod as raw_mod
 from quadrants._ops import reset as reset
 from quadrants._ops import select as select
-from quadrants._ops import simt as simt
 from quadrants._ops import sync as sync
 from quadrants._ops import vulkan as vulkan
 from quadrants._ops import x64 as x64
 from quadrants._ops import x86_64 as x86_64
+from quadrants.lang import simt as simt
 from quadrants.math import acos as acos
 from quadrants.math import asin as asin
 from quadrants.math import atan2 as atan2

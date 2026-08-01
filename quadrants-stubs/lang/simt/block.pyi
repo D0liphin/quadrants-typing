@@ -1,0 +1,6 @@
+from quadrants import i32
+
+from quadrants_typing._algebra import _Num
+
+def reduce_add(self, value: _Num, block_dim: int, dtype: type[_Num], /) -> _Num: ...
+def thread_idx(self) -> i32: ...
