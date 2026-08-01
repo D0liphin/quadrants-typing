@@ -217,7 +217,7 @@ quadrants.                                          ?
   GraphStatus x   graph_parallel x   graph_parallel_context x   graph_do_while x
 
   # static / compile-time
-  static ✔   static_assert x   static_print x   stop_grad x   template ✔
+  static ✔   static_assert ✔   static_print ✔   stop_grad x   template ✔
   checkpoint x   dump_compile_config x   is_extension_enabled x
 
   # misc intrinsics
