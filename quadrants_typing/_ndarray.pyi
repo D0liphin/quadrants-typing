@@ -13,20 +13,18 @@ from quadrants_typing._algebra import (
     _El,
 )
 from quadrants_typing._arraylike import _ArrayLike
-from quadrants_typing._dim import Dim1, Dim2, Dim3, DimAny
+from quadrants_typing._dim import DimAny
 from quadrants_typing._mat import Mat
 from quadrants_typing._vec import Vec
 
 class _ElementShape:
     @overload
-    def __get__(self, instance: NDArray[Number, Dim2], owner: Any = None) -> tuple[()]: ...
+    def __get__(self, instance: NDArray[Number, Any], owner: Any = None) -> tuple[()]: ...
+    @overload
+    def __get__(self, instance: NDArray[Vec[Any, Any], Any], owner: Any = None) -> tuple[int,]: ...
     @overload
     def __get__(
-        self, instance: NDArray[Vec[Any, Any], Dim3], owner: Any = None
-    ) -> tuple[int, int]: ...
-    @overload
-    def __get__(
-        self, instance: NDArray[Mat[Any, Any, Any], Dim1], owner: Any = None
+        self, instance: NDArray[Mat[Any, Any, Any], Any], owner: Any = None
     ) -> tuple[int, int]: ...
 
 class NDArray(_ArrayLike[_El, _Dim], Generic[_El, _Dim]):
