@@ -106,9 +106,11 @@ _Num = TypeVar("_Num", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64
 _Num2 = TypeVar("_Num2", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64)
 
 # Family subsets, for overloads that must split integer- vs float-typed results
-# (e.g. `Mat.to_list`, integer-only ops). Same enumeration, partitioned.
-_IntNum = TypeVar("_IntNum", int, i8, i16, i64, u1, u8, u16, u32, u64)
-_FloatNum = TypeVar("_FloatNum", float, f16, f64)
+# (e.g. `Mat.to_list`, integer-only ops). Same enumeration, partitioned. These
+# need no method-scoped twin (see below): no container is generic over a family
+# subset, so they are never class-scoped and are legal in `self` annotations.
+_Int = TypeVar("_Int", int, i8, i16, i64, u1, u8, u16, u32, u64)
+_Float = TypeVar("_Float", float, f16, f64)
 
 # `NDArray` elements are *bounded*, not enumerated: an element may itself be a
 # `Vec`/`Mat` (a `DType` subclass that can't be listed), so a bound is required.
@@ -125,8 +127,6 @@ _Col = TypeVar("_Col", bound=DimAny, covariant=True)
 # the class-scoped `_Num`/`_Dim` (pyright forbids class-scoped vars in `self`
 # annotations). Same enumerations/bounds; distinct identities.
 _NumAlt = TypeVar("_NumAlt", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64)
-_IntNumAlt = TypeVar("_IntNumAlt", int, i8, i16, i64, u1, u8, u16, u32, u64)
-_FloatNumAlt = TypeVar("_FloatNumAlt", float, f16, f64)
 _DimAlt = TypeVar("_DimAlt", bound=DimAny, covariant=True)
 _RowAlt = TypeVar("_RowAlt", bound=DimAny, covariant=True)
 _ColAlt = TypeVar("_ColAlt", bound=DimAny, covariant=True)

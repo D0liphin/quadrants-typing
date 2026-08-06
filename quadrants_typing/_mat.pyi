@@ -8,8 +8,8 @@ from quadrants_typing._algebra import (
     DType,
     _Col,
     _ColAlt,
-    _FloatNum,
-    _IntNum,
+    _Float,
+    _Int,
     _Num,
     _NumAlt,
     _NumInit,
@@ -94,9 +94,9 @@ class Mat(DType, Generic[_Num, _Row, _Col]):
     def inverse(self) -> Self: ...
     def frobenius_inner(self, other: Self) -> _Num: ...
     @overload
-    def to_list(self: Mat[_FloatNum, DimAny, DimAny]) -> list[list[float]]: ...
+    def to_list(self: Mat[_Float, DimAny, DimAny]) -> list[list[float]]: ...
     @overload
-    def to_list(self: Mat[_IntNum, DimAny, DimAny]) -> list[list[int]]: ...
+    def to_list(self: Mat[_Int, DimAny, DimAny]) -> list[list[int]]: ...
     # `to_numpy` maps each concrete element dtype to its numpy counterpart
     # (mirrors `NDArray.to_numpy`). `qd.i32`/`qd.f32` are the builtins `int`/
     # `float`; the ten nominal cores map by width.
