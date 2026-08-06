@@ -27,18 +27,38 @@ VECTOR_ARITHMETIC = (
     "(x - y).y",
     "(x * y).z",
     "(x / y).x",
+    "(x // y).x",
     "(x % y).x",
+    "(x**y).x",
     "(-x).x",
+    "(+x).x",
+    "abs(-x).x",
     "(x + s).x",
+    "(s + x).x",
+    "(x - s).x",
+    "(s - x).x",
     "(x * s).y",
     "(s * x).y",
     "(x / s).z",
     "(s / x).z",
+    "(x // s).x",
+    "(s // x).x",
     "(x % s).x",
     "(s % x).x",
+    "(x**s).x",
+    "(s**x).x",
     "x[1] = s; x[1]",
 )
-VECTOR_COMPARISON = ("(x == y).x", "(x == y).y", "(x != y).x", "(x != y).y")
+VECTOR_COMPARISON = (
+    "(x < y).x",
+    "(x <= y).z",
+    "(x > y).x",
+    "(x >= y).z",
+    "(x == y).x",
+    "(x == y).y",
+    "(x != y).x",
+    "(x != y).y",
+)
 VECTOR_BITWISE = (
     "(x & y).x",
     "(x | y).y",
@@ -53,12 +73,15 @@ VECTOR_BITWISE = (
     "(x ^ 5).x",
     "(5 ^ x).x",
     "(x << 2).x",
+    "(2 << x).x",
     "(x >> 2).x",
+    "(4096 >> x).x",
 )
 MATRIX = (
     "(m + n)[2, 2]",
     "(m - n)[2, 2]",
     "(-m)[2, 2]",
+    "(m * n)[1, 1]",
     "(m * s)[2, 2]",
     "(s * m)[2, 2]",
     "(m / s)[2, 2]",
@@ -117,29 +140,45 @@ def vector_arithmetic(out: qdt.NDArray[qd.f32, qdt.Dim1]) -> None:
     out[1] = (x - y).y
     out[2] = (x * y).z
     out[3] = (x / y).x
-    out[4] = (x % y).x
-    out[5] = (-x).x
-    # Elementwise against a scalar, including the reflected forms.
-    out[6] = (x + s).x
-    out[7] = (x * s).y
-    out[8] = (s * x).y
-    out[9] = (x / s).z
-    out[10] = (s / x).z
-    out[11] = (x % s).x
-    out[12] = (s % x).x
+    out[4] = (x // y).x
+    out[5] = (x % y).x
+    out[6] = (x**y).x
+    out[7] = (-x).x
+    out[8] = (+x).x
+    out[9] = abs(-x).x
+    # Elementwise against a scalar, each with its reflected form.
+    out[10] = (x + s).x
+    out[11] = (s + x).x
+    out[12] = (x - s).x
+    out[13] = (s - x).x
+    out[14] = (x * s).y
+    out[15] = (s * x).y
+    out[16] = (x / s).z
+    out[17] = (s / x).z
+    out[18] = (x // s).x
+    out[19] = (s // x).x
+    out[20] = (x % s).x
+    out[21] = (s % x).x
+    out[22] = (x**s).x
+    out[23] = (s**x).x
     x[1] = s
-    out[13] = x[1]
+    out[24] = x[1]
 
 
-# `==` / `!=` compare elementwise into a `Vec[u1, D]`, not a scalar `bool`.
+# Every comparison is elementwise, so it yields a `Vec[u1, D]` mask rather than
+# the scalar `bool` a comparison of two scalars gives.
 @qd.kernel
 def vector_comparison(out: qdt.NDArray[qd.u1, qdt.Dim1]) -> None:
     x = qdt.Vec3f(6.0, 4.0, 2.0)
-    y = qdt.Vec3f(6.0, 2.0, 1.0)
-    out[0] = (x == y).x
-    out[1] = (x == y).y
-    out[2] = (x != y).x
-    out[3] = (x != y).y
+    y = qdt.Vec3f(6.0, 2.0, 4.0)
+    out[0] = (x < y).x
+    out[1] = (x <= y).z
+    out[2] = (x > y).x
+    out[3] = (x >= y).z
+    out[4] = (x == y).x
+    out[5] = (x == y).y
+    out[6] = (x != y).x
+    out[7] = (x != y).y
 
 
 @qd.kernel
@@ -153,8 +192,8 @@ def vector_bitwise(out: qdt.NDArray[qd.i32, qdt.Dim1]) -> None:
     out[3] = (~x).x
     out[4] = (x << sh).x
     out[5] = (x >> sh).x
-    # Against a scalar. `&`, `|` and `^` also declare a reflected form; the
-    # shifts do not, since the right operand of a shift is a count, not a value.
+    # Against a scalar, each with its reflected form. A reflected shift reads
+    # oddly — the vector is the shift count, not the value being shifted.
     out[6] = (x & 6).x
     out[7] = (6 & x).x
     out[8] = (x | 1).x
@@ -162,26 +201,30 @@ def vector_bitwise(out: qdt.NDArray[qd.i32, qdt.Dim1]) -> None:
     out[10] = (x ^ 5).x
     out[11] = (5 ^ x).x
     out[12] = (x << 2).x
-    out[13] = (x >> 2).x
+    out[13] = (2 << x).x
+    out[14] = (x >> 2).x
+    out[15] = (4096 >> x).x
 
 
 @qd.kernel
 def matrix_operators(out: qdt.NDArray[qd.f32, qdt.Dim1]) -> None:
     m = qdt.Mat3f([[1.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0.0, 0.0, 3.0]])
-    n = qdt.Mat3f([[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
+    # A bare scalar fills every entry.
+    n = qdt.Mat3f(1.0)
     v = qdt.Vec3f(1.0, 2.0, 3.0)
     s = qd.f32(2.0)
     out[0] = (m + n)[2, 2]
     out[1] = (m - n)[2, 2]
     out[2] = (-m)[2, 2]
-    # `*` and `/` scale by a scalar; the matrix product is `@`.
-    out[3] = (m * s)[2, 2]
-    out[4] = (s * m)[2, 2]
-    out[5] = (m / s)[2, 2]
-    out[6] = (m @ m)[2, 2]
-    out[7] = (m @ v).z
+    # `*` is elementwise or a scale; the matrix product is `@`.
+    out[3] = (m * n)[1, 1]
+    out[4] = (m * s)[2, 2]
+    out[5] = (s * m)[2, 2]
+    out[6] = (m / s)[2, 2]
+    out[7] = (m @ m)[2, 2]
+    out[8] = (m @ v).z
     m[0, 0] = s
-    out[8] = m[0, 0]
+    out[9] = m[0, 0]
 
 
 def report(title: str, labels: tuple[str, ...], values: npt.NDArray[Any]) -> None:
@@ -216,7 +259,7 @@ def main() -> None:
 
     bits = qd.ndarray(qd.u1, (len(VECTOR_COMPARISON),))
     vector_comparison(bits)
-    report("vector comparison (x=(6,4,2), y=(6,2,1))", VECTOR_COMPARISON, bits.to_numpy())
+    report("vector comparison (x=(6,4,2), y=(6,2,4))", VECTOR_COMPARISON, bits.to_numpy())
 
     vector_ints = qd.ndarray(qd.i32, (len(VECTOR_BITWISE),))
     vector_bitwise(vector_ints)

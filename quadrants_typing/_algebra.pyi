@@ -122,10 +122,12 @@ _Dim = TypeVar("_Dim", bound=DimAny, covariant=True)
 _Row = TypeVar("_Row", bound=DimAny, covariant=True)
 _Col = TypeVar("_Col", bound=DimAny, covariant=True)
 
-# Alternate element/dimension markers, for `self`-type annotations inside
-# methods: a `self: Vec[_NumAlt, _DimAlt]` must use *method-scoped* TypeVars, not
-# the class-scoped `_Num`/`_Dim` (pyright forbids class-scoped vars in `self`
-# annotations). Same enumerations/bounds; distinct identities.
+# Alternate element/dimension markers, for `self` annotations in `__init__`:
+# pyright rejects class-scoped type variables there specifically
+# (`reportInvalidTypeVarUse`), so a `self: Vec[_NumAlt, _DimAlt]` overload needs
+# method-scoped copies. Ordinary methods may use `_Num`/`_Dim` in `self` freely,
+# as `Vec.x` and `Mat.__matmul__` do. Same enumerations/bounds; distinct
+# identities.
 _NumAlt = TypeVar("_NumAlt", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64)
 _DimAlt = TypeVar("_DimAlt", bound=DimAny, covariant=True)
 _RowAlt = TypeVar("_RowAlt", bound=DimAny, covariant=True)
