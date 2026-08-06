@@ -138,8 +138,9 @@ quadrants.                                          ?
     write_vtk x*
     diagnose.                                       x
 
-  interop.                                          x
-    get_mps_command_queue x
+  interop.                                          ✔   (fully stubbed)
+    get_mps_command_queue ✔
+
 
   profiler.                                         x
     CuptiMetric x
@@ -268,7 +269,7 @@ Ordered roughly by likely impact for downstream users:
    solvers, and sparse grids.
 6. **Linear-algebra free functions** — `svd`, `sym_eig`, `eig`, `solve`,
    `polar_decompose`, `make_spd`, `randn`.
-7. **Snode / layout / streams / graph / profiler / interop / tools** —
+7. **Snode / layout / streams / graph / profiler / tools** —
    lower-priority but all untyped.
 8. **Exceptions & logging** — the `Quadrants*Error` hierarchy and log-level
    constants (cheap wins).
