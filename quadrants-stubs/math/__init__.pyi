@@ -1,8 +1,8 @@
 # fmt: off
 
-from typing import overload
+from typing import TypeVar, overload
 
-from quadrants.types.primitive_types import f32
+from quadrants.types.primitive_types import f32, f64, i16, i32, i64, u16, u32, u64
 
 import quadrants_typing as qdt
 from quadrants_typing._algebra import _Col, _Dim, _Num, _Row
@@ -234,21 +234,27 @@ def step(edge: qdt.Mat[_Num, _Row, _Col] | _Num, x: qdt.Mat[_Num, _Row, _Col] | 
 
 # min / max
 
+_MinMaxCompatibleNum = TypeVar("_MinMaxCompatibleNum", u16, u32, u64, i16, i32, i64, f32, f64)
+"""
+LLVM spits out a codegen error and then core dumps for operations on u8/i8, so
+we can ban these in the type signature
+"""
+
 # max
 @overload  # scalar
-def max(*args: _Num) -> _Num: ...
+def max(*args: _MinMaxCompatibleNum) -> _MinMaxCompatibleNum: ...
 @overload  # vector
-def max(*args: qdt.Vec[_Num, _Dim] | _Num) -> qdt.Vec[_Num, _Dim]: ...
+def max(*args: qdt.Vec[_MinMaxCompatibleNum, _Dim] | _MinMaxCompatibleNum) -> qdt.Vec[_MinMaxCompatibleNum, _Dim]: ...
 @overload  # matrix
-def max(*args: qdt.Mat[_Num, _Row, _Col] | _Num) -> qdt.Mat[_Num, _Row, _Col]: ...
+def max(*args: qdt.Mat[_MinMaxCompatibleNum, _Row, _Col] | _MinMaxCompatibleNum) -> qdt.Mat[_MinMaxCompatibleNum, _Row, _Col]: ...
 
 # min
 @overload  # scalar
-def min(*args: _Num) -> _Num: ...
+def min(*args: _MinMaxCompatibleNum) -> _MinMaxCompatibleNum: ...
 @overload  # vector
-def min(*args: qdt.Vec[_Num, _Dim] | _Num) -> qdt.Vec[_Num, _Dim]: ...
+def min(*args: qdt.Vec[_MinMaxCompatibleNum, _Dim] | _MinMaxCompatibleNum) -> qdt.Vec[_MinMaxCompatibleNum, _Dim]: ...
 @overload  # matrix
-def min(*args: qdt.Mat[_Num, _Row, _Col] | _Num) -> qdt.Mat[_Num, _Row, _Col]: ...
+def min(*args: qdt.Mat[_MinMaxCompatibleNum, _Row, _Col] | _MinMaxCompatibleNum) -> qdt.Mat[_MinMaxCompatibleNum, _Row, _Col]: ...
 
 # predicates / integer ops (return int elements, so container type is not preserved)
 
