@@ -59,6 +59,17 @@ class Integer(Number):
     def __index__(self) -> int: ...
     def __float__(self) -> float: ...
     def __int__(self) -> int: ...
+    def __and__(self, other: Self, /) -> Self: ...
+    def __rand__(self, other: Self, /) -> Self: ...
+    def __or__(self, other: Self, /) -> Self: ...
+    def __ror__(self, other: Self, /) -> Self: ...
+    def __xor__(self, other: Self, /) -> Self: ...
+    def __rxor__(self, other: Self, /) -> Self: ...
+    def __lshift__(self, other: Self, /) -> Self: ...
+    def __rlshift__(self, other: Self, /) -> Self: ...
+    def __rshift__(self, other: Self, /) -> Self: ...
+    def __rrshift__(self, other: Self, /) -> Self: ...
+    def __invert__(self) -> Self: ...
 
 class SignedInteger(Integer):
     """Signed integer quadrants dtype. Mirrors :class:`numpy.signedinteger`."""
@@ -95,9 +106,11 @@ _Num = TypeVar("_Num", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64
 _Num2 = TypeVar("_Num2", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64)
 
 # Family subsets, for overloads that must split integer- vs float-typed results
-# (e.g. `Mat.to_list`, integer-only ops). Same enumeration, partitioned.
-_IntNum = TypeVar("_IntNum", int, i8, i16, i64, u1, u8, u16, u32, u64)
-_FloatNum = TypeVar("_FloatNum", float, f16, f64)
+# (e.g. `Mat.to_list`, integer-only ops). Same enumeration, partitioned. These
+# need no method-scoped twin (see below): no container is generic over a family
+# subset, so they are never class-scoped and are legal in `self` annotations.
+_Int = TypeVar("_Int", int, i8, i16, i64, u1, u8, u16, u32, u64)
+_Float = TypeVar("_Float", float, f16, f64)
 
 # `NDArray` elements are *bounded*, not enumerated: an element may itself be a
 # `Vec`/`Mat` (a `DType` subclass that can't be listed), so a bound is required.
@@ -109,13 +122,13 @@ _Dim = TypeVar("_Dim", bound=DimAny, covariant=True)
 _Row = TypeVar("_Row", bound=DimAny, covariant=True)
 _Col = TypeVar("_Col", bound=DimAny, covariant=True)
 
-# Alternate element/dimension markers, for `self`-type annotations inside
-# methods: a `self: Vec[_NumAlt, _DimAlt]` must use *method-scoped* TypeVars, not
-# the class-scoped `_Num`/`_Dim` (pyright forbids class-scoped vars in `self`
-# annotations). Same enumerations/bounds; distinct identities.
+# Alternate element/dimension markers, for `self` annotations in `__init__`:
+# pyright rejects class-scoped type variables there specifically
+# (`reportInvalidTypeVarUse`), so a `self: Vec[_NumAlt, _DimAlt]` overload needs
+# method-scoped copies. Ordinary methods may use `_Num`/`_Dim` in `self` freely,
+# as `Vec.x` and `Mat.__matmul__` do. Same enumerations/bounds; distinct
+# identities.
 _NumAlt = TypeVar("_NumAlt", int, float, f16, f64, i8, i16, i64, u1, u8, u16, u32, u64)
-_IntNumAlt = TypeVar("_IntNumAlt", int, i8, i16, i64, u1, u8, u16, u32, u64)
-_FloatNumAlt = TypeVar("_FloatNumAlt", float, f16, f64)
 _DimAlt = TypeVar("_DimAlt", bound=DimAny, covariant=True)
 _RowAlt = TypeVar("_RowAlt", bound=DimAny, covariant=True)
 _ColAlt = TypeVar("_ColAlt", bound=DimAny, covariant=True)
