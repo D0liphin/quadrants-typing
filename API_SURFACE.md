@@ -204,7 +204,7 @@ quadrants.                                          ?
   Tensor x   MatrixTensor x   VectorTensor x
   BitpackedFields x   BufferView x   FieldsBuilder x   SNode x
   Mesh x   MeshInstance x   Template x
-  field x   ndarray ✔   tensor x   wrap x   dataclass x
+  field x   ndarray ✔   tensor x   wrap x   dataclass ✔
   one x   zero x
 
   # snode / layout
@@ -255,7 +255,7 @@ Ordered roughly by likely impact for downstream users:
 
 1. **Field / Ndarray / Matrix data model** — `Field`, `ScalarField`,
    `MatrixField`, `StructField`, `Ndarray` & friends, `Matrix`, `Vector`,
-   `Struct`, plus the constructors `field`, `struct`, `dataclass`. This is the
+   `Struct`, plus the constructors `field`, `struct` (`dataclass` is done). This is the
    core runtime data model and is entirely untyped.
 2. **`types.` gaps** — `NDArray`, `ndarray`, `struct`, `ref`, the
    `is_integral/is_real/is_signed/is_tensor` predicates, the long-name dtype

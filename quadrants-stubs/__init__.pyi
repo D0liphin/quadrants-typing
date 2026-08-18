@@ -23,6 +23,7 @@ from quadrants._ops import cast as cast
 from quadrants._ops import cpu as cpu
 from quadrants._ops import cuda as cuda
 from quadrants._ops import data_oriented as data_oriented
+from quadrants._ops import dataclass as dataclass
 from quadrants._ops import func as func
 from quadrants._ops import gpu as gpu
 from quadrants._ops import grouped as grouped
