@@ -1,5 +1,5 @@
 from enum import IntEnum
-from typing import Any, Callable, Iterable, Iterator, TypeVar, overload
+from typing import Any, Callable, Iterable, Iterator, TypeVar, dataclass_transform, overload
 
 from quadrants.types.primitive_types import f16, f32, f64, i8, i16, i32, i64, u8, u16, u32, u64
 
@@ -61,7 +61,7 @@ def data_oriented(cls: type[_T], /) -> type[_T]: ...
 @overload
 def data_oriented(*, template_primitives: bool = ...) -> Callable[[type[_T]], type[_T]]: ...
 
-# dataclass
+@dataclass_transform()
 def dataclass(cls: type[_T], /) -> type[_T]: ...
 
 # sync
