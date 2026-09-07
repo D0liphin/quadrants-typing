@@ -200,7 +200,7 @@ quadrants.                                          ?
   # data containers / fields (all x)
   Field x   ScalarField x   MatrixField x   StructField x
   Ndarray x   ScalarNdarray x   MatrixNdarray x   VectorNdarray x
-  Matrix x   Vector x   Struct x
+  Matrix x   Vector x   Struct x   lang.struct.StructType ? (members, methods, dtype)
   Tensor x   MatrixTensor x   VectorTensor x
   BitpackedFields x   BufferView x   FieldsBuilder x   SNode x
   Mesh x   MeshInstance x   Template x

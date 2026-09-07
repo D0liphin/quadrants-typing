@@ -1,7 +1,10 @@
 # pyright: strict
 """Define a `@qd.dataclass` struct, build it via its synthesized constructor, and use a member func."""
 
+from typing import cast
+
 import quadrants as qd
+from quadrants.lang.struct import StructType
 
 import quadrants_typing as qdt
 
@@ -35,6 +38,9 @@ def main() -> None:
     p = Particle(pos=qd.math.vec3(1.0), mass=3.0)
 
     print("particle:", p)
+    # At runtime the decorated name is a `StructType`; its `members` give the
+    # storage order, which a host-side table layout has to follow.
+    print("members:", list(cast(StructType, Particle).members))
     print("momentum norm:", momentum_norm(p))
 
 
