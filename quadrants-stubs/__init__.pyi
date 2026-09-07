@@ -32,6 +32,7 @@ from quadrants._ops import kernel as kernel
 from quadrants._ops import loop_config as loop_config
 from quadrants._ops import metal as metal
 from quadrants._ops import ndrange as ndrange
+from quadrants._ops import pyfunc as pyfunc
 from quadrants._ops import python as python
 from quadrants._ops import random as random
 from quadrants._ops import raw_div as raw_div
