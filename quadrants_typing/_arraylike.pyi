@@ -84,10 +84,11 @@ class _ArrayLike(Generic[_El, _Dim]):
     def __getitem__(
         self: _ArrayLike[_El, Dim8], key: _Vec8i | tuple[int, int, int, int, int, int, int, int], /
     ) -> _El: ...
+    # Rank-generic fallback: the index `Vec`'s rank is tied to the array's, so a
+    # known-rank tensor only admits a matching-rank index (and never a bare `int`
+    # or an arbitrary-length `tuple`). This is what `qd.grouped` iteration yields.
     @overload
-    def __getitem__(
-        self: _ArrayLike[_El, DimAny], key: Vec[int, DimAny] | tuple[int, ...] | int, /
-    ) -> _El: ...
+    def __getitem__[_D: DimAny](self: _ArrayLike[_El, _D], key: Vec[int, _D], /) -> _El: ...
     @overload
     def __setitem__(self: _ArrayLike[_El, Dim1], key: int, val: _El, /) -> None: ...
     @overload
@@ -128,6 +129,6 @@ class _ArrayLike(Generic[_El, _Dim]):
         /,
     ) -> None: ...
     @overload
-    def __setitem__(
-        self: _ArrayLike[_El, DimAny], key: Vec[int, DimAny] | tuple[int, ...] | int, val: _El, /
+    def __setitem__[_D: DimAny](
+        self: _ArrayLike[_El, _D], key: Vec[int, _D], val: _El, /
     ) -> None: ...
