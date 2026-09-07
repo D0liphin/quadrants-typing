@@ -164,7 +164,7 @@ quadrants.                                          ?
 
   # kernels / functions / decorators
   kernel ✔   func ✔   data_oriented ✔
-  pyfunc x   real_func x   pure x   perf_dispatch x
+  pyfunc ✔   real_func x   pure x   perf_dispatch x
 
   # lifecycle
   init ✔   reset ✔   sync ✔
