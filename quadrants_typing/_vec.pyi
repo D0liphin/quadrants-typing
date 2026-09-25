@@ -7,9 +7,11 @@ from quadrants.types.primitive_types import i32, u1
 
 from quadrants_typing._algebra import (
     DType,
+    Integer,
     _Dim,
     _DimAlt,
     _Int,
+    _Int2,
     _Num,
     _NumAlt,
     _NumInit,
@@ -84,13 +86,13 @@ class Vec(DType, Generic[_Num, _Dim]):
     ) -> Vec[_Int, _DimAlt]: ...
     def __rxor__(self: Vec[_Int, _DimAlt], other: _Int, /) -> Vec[_Int, _DimAlt]: ...
     def __lshift__(
-        self: Vec[_Int, _DimAlt], other: Vec[_Int, _DimAlt] | _Int, /
+        self: Vec[_Int, _DimAlt], other: Vec[_Int2, _DimAlt] | int | Integer, /
     ) -> Vec[_Int, _DimAlt]: ...
-    def __rlshift__(self: Vec[_Int, _DimAlt], other: _Int, /) -> Vec[_Int, _DimAlt]: ...
+    def __rlshift__(self: Vec[_Int, _DimAlt], other: _Int2, /) -> Vec[_Int2, _DimAlt]: ...
     def __rshift__(
-        self: Vec[_Int, _DimAlt], other: Vec[_Int, _DimAlt] | _Int, /
+        self: Vec[_Int, _DimAlt], other: Vec[_Int2, _DimAlt] | int | Integer, /
     ) -> Vec[_Int, _DimAlt]: ...
-    def __rrshift__(self: Vec[_Int, _DimAlt], other: _Int, /) -> Vec[_Int, _DimAlt]: ...
+    def __rrshift__(self: Vec[_Int, _DimAlt], other: _Int2, /) -> Vec[_Int2, _DimAlt]: ...
     def __invert__(self: Vec[_Int, _DimAlt]) -> Vec[_Int, _DimAlt]: ...
     # Comparisons are elementwise, so they yield a `u1` mask rather than a
     # `bool`. `__eq__`/`__ne__` widen `object`'s signature, hence the ignores.

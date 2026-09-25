@@ -16,6 +16,15 @@ def scalar_operators(out: qdt.NDArray[qd.i32, qdt.Dim1]) -> None:
 
 
 @qd.kernel
+def shift_operators(out: qdt.NDArray[qd.u32, qdt.Dim1], n: qd.i32) -> None:
+    out[0] = qd.cast(qd.u64(n) >> 32, qd.u32)
+    out[1] = qd.u32(n) >> 8
+    out[2] = qd.u32(1) << n
+    out[3] = qd.cast((n >> 31) & 1, qd.u32)
+    out[4] = (qd.math.uvec3(1, 2, 3) << n).z
+
+
+@qd.kernel
 def vector_operators(out: qdt.NDArray[qd.f32, qdt.Dim1]) -> None:
     x = qdt.Vec3f(6.0, 4.0, 2.0)
     y = qdt.Vec3f(3.0, 2.0, 1.0)
@@ -40,6 +49,9 @@ def main() -> None:
     scalars = qd.ndarray(qd.i32, (3,))
     scalar_operators(scalars)
     print("scalar (a=12, b=10):", scalars.to_numpy())
+
+    shifts = qd.ndarray(qd.u32, (5,))
+    shift_operators(shifts, 4)
 
     vectors = qd.ndarray(qd.f32, (3,))
     vector_operators(vectors)
